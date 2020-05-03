@@ -2,9 +2,12 @@ package tech.visdom.b2school_server.model.learning_tests;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import tech.visdom.b2school_server.dto.learning_tests.UserLevelDto;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Data
@@ -37,4 +40,15 @@ public class UserLevel {
     @Column(name = "SUCCESS_EXERCISE_COUNT", nullable = false)
     private Integer successExerciseCount;
 
+    @OneToMany(mappedBy="userLevel", cascade = CascadeType.PERSIST)
+    private List<Result> results;
+
+    public UserLevelDto toDto() {
+        UserLevelDto userLevelDto = new UserLevelDto();
+        userLevelDto.setExerciseCount(this.exerciseCount);
+        userLevelDto.setSuccessExerciseCount(this.successExerciseCount);
+        userLevelDto.setSuccessfullyPassed(this.successfullyPassed);
+        userLevelDto.setResults(this.results.stream().map(Result::toDto).collect(Collectors.toList()));
+        return userLevelDto;
+    }
 }

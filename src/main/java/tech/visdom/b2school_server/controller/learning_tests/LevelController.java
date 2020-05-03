@@ -26,7 +26,10 @@ public class LevelController {
 
     @PostMapping("")
     public ResponseEntity sendResult(@RequestBody @Valid UserTestResult userTestResult) {
-        userLevelService.saveResults(userTestResult);
-        return new ResponseEntity(HttpStatus.CREATED);
+        try {
+            return new ResponseEntity<>(userLevelService.saveResults(userTestResult), HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e){
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
     }
 }

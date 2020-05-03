@@ -4,12 +4,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tech.visdom.b2school_server.dao.learning_tests.AnswerDao;
 import tech.visdom.b2school_server.dao.learning_tests.UserLevelDao;
+import tech.visdom.b2school_server.dto.learning_tests.UserLevelDto;
 import tech.visdom.b2school_server.dto.learning_tests.UserTestResult;
 import tech.visdom.b2school_server.exception.AnswerNotFoundException;
 import tech.visdom.b2school_server.model.learning_tests.Answer;
+import tech.visdom.b2school_server.model.learning_tests.Result;
 import tech.visdom.b2school_server.model.learning_tests.UserLevel;
 import tech.visdom.b2school_server.service.UserService;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Service
@@ -28,13 +32,14 @@ public class UserLevelService {
         this.answerDao = answerDao;
     }
 
-    public void saveResults(UserTestResult userTestResult) {
+    public UserLevelDto saveResults(UserTestResult userTestResult) {
         UserLevel userLevel = new UserLevel();
         userLevel.setUserId(userService.getAuthUserCredentials().getId());
         userLevel.setLevelId(userTestResult.getLevelId());
         userLevel.setDateStart(userTestResult.getDateStart());
         userLevel.setDateFinish(userTestResult.getDateFinish());
         userLevel.setExerciseCount(userTestResult.getAnswers().size());
+        List<Result> results = new ArrayList<>();
 
         AtomicReference<Integer> successExerciseCount = new AtomicReference<>(0);
         userTestResult.getAnswers().forEach((a) -> {
@@ -44,10 +49,11 @@ public class UserLevelService {
             if (answer.getIsCorrect()) {
                 successExerciseCount.updateAndGet(v -> v + 1);
             }
+            results.add(new Result(answer.getExercise().getText(), answer.getText(), answer.getIsCorrect(), userLevel));
         });
         userLevel.setSuccessExerciseCount(successExerciseCount.get());
         userLevel.setSuccessfullyPassed(userTestResult.getAnswers().size() == successExerciseCount.get());
-
-        userLevelDao.save(userLevel);
+        userLevel.setResults(results);
+        return userLevelDao.save(userLevel).toDto();
     }
 }
