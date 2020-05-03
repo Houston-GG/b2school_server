@@ -13,7 +13,7 @@
     <version>0.0.1</version>
     <name>b2school_server</name>
     <description>B2school project server</description>
-
+    <packaging>war</packaging>
     <properties>
         <java.version>11</java.version>
         <swagger.version>2.9.2</swagger.version>
@@ -31,6 +31,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -75,7 +80,14 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-xml</artifactId>
+        </dependency>
     </dependencies>
+
+
 
     <build>
         <plugins>

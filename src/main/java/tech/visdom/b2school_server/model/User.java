@@ -2,6 +2,7 @@ package tech.visdom.b2school_server.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import tech.visdom.b2school_server.dto.UserDto;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -45,4 +46,15 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")
     )
     private List<Role> roles;
+
+    public UserDto toDto() {
+
+        UserDto userDto = new UserDto();
+        userDto.setUserName(this.userName);
+        userDto.setFirstName(this.firstName);
+        userDto.setLastName(this.lastName);
+        userDto.setPoints(this.points);
+        return userDto;
+    }
+
 }
