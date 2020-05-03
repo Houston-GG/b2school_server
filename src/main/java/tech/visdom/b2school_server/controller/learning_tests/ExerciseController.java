@@ -21,12 +21,14 @@ public class ExerciseController {
         this.exerciseService = exerciseService;
     }
 
-    @GetMapping("/{exerciseId}")
-    public ResponseEntity getExercises(@PathVariable(value = "exerciseId") Long exerciseId) {
+    @GetMapping("/{levelId}")
+    public ResponseEntity getExercises(@PathVariable(value = "levelId") Long levelId) {
         try {
-            return new ResponseEntity<>(exerciseService.getExercisesByLevelId(exerciseId), HttpStatus.OK);
+            return new ResponseEntity<>(exerciseService.getExercisesByLevelId(levelId), HttpStatus.OK);
         } catch (ExercisesNotFoundException e){
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
+
+
 }

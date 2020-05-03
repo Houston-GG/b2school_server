@@ -22,8 +22,9 @@ public class Answer {
     @Column(name = "IS_CORRECT", nullable = false)
     private Boolean isCorrect;
 
-    @Column(name = "EXERCISE_ID", nullable = false)
-    private Long exerciseId;
+    @ManyToOne
+    @JoinColumn(name = "EXERCISE_ID", nullable = false)
+    private Exercise exercise;
 
     public AnswerDto toDto() {
         AnswerDto answerDto = new AnswerDto();

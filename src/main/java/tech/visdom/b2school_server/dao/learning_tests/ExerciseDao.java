@@ -11,4 +11,5 @@ public interface ExerciseDao extends CrudRepository<Exercise, Long> {
 
     @Query(value="SELECT * FROM exercise WHERE LEVEL_ID = ?1 ORDER BY RAND() LIMIT ?2", nativeQuery = true)
     Optional<List<Exercise>> findByLevelId(Long levelId, Integer limit);
+
 }

@@ -24,4 +24,8 @@ public class ExerciseService {
         return exerciseDao.findByLevelId(levelId, 6).orElseThrow(() -> new ExercisesNotFoundException("No exercises found by level ID " + levelId + "."))
                 .stream().map(Exercise::toDto).collect(Collectors.toList());
     }
+
+    public Exercise getExerciseById(Long exerciseId) {
+        return exerciseDao.findById(exerciseId).orElseThrow(() -> new ExercisesNotFoundException("No exercises found by ID " + exerciseId + "."));
+    }
 }
