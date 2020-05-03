@@ -13,4 +13,5 @@ public class LevelDto {
 
     private Integer levelNumber;
 
+    private UserLevelDto userLevelDto;
 }

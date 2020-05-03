@@ -56,4 +56,12 @@ public class UserLevelService {
         userLevel.setResults(results);
         return userLevelDao.save(userLevel).toDto();
     }
+
+    public UserLevelDto getLastUserLevel(Long userId, Long levelId) {
+        UserLevel userLevel = userLevelDao.findTopByUserIdAndLevelIdOrderByDateStartDesc(userId, levelId);
+        if (userLevel != null)
+            return userLevel.toDto();
+        else
+            return null;
+    }
 }
