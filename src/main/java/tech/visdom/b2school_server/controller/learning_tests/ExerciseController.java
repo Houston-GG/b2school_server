@@ -22,7 +22,7 @@ public class ExerciseController {
     }
 
     @GetMapping("/{exerciseId}")
-    public ResponseEntity loginUser(@PathVariable(value = "exerciseId") Long exerciseId) {
+    public ResponseEntity getExercises(@PathVariable(value = "exerciseId") Long exerciseId) {
         try {
             return new ResponseEntity<>(exerciseService.getExercisesByLevelId(exerciseId), HttpStatus.OK);
         } catch (ExercisesNotFoundException e){
