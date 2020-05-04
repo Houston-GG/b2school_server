@@ -22,6 +22,16 @@ public class GroupController {
         this.groupService = groupService;
     }
 
+
+    @GetMapping("/all")
+    public ResponseEntity getAllClassGroupsDto() {
+        try {
+            return new ResponseEntity<>(groupService.getAllClassGroupsDto(), HttpStatus.OK);
+        } catch (GroupNotFoundException e){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity getGroupById(@PathVariable(value = "id") Long id) {
         try {
@@ -35,6 +45,15 @@ public class GroupController {
     public ResponseEntity createClassGroup(@RequestBody @Valid SampleClassGroupDto sampleClassGroupDto) {
         try {
             return new ResponseEntity<>(groupService.createClassGroup(sampleClassGroupDto), HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e){
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+    }
+
+    @PutMapping("/join/{classGroupId}")
+    public ResponseEntity joinClassGroup(@PathVariable(value = "classGroupId") Long classGroupId) {
+        try {
+            return new ResponseEntity<>(groupService.joinClassGroup(classGroupId), HttpStatus.OK);
         } catch (DataIntegrityViolationException e){
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
