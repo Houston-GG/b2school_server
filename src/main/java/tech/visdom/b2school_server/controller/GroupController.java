@@ -41,6 +41,15 @@ public class GroupController {
         }
     }
 
+    @GetMapping("/city/{city}")
+    public ResponseEntity getClassGroupsByCity(@PathVariable(value = "city") String city) {
+        try {
+            return new ResponseEntity<>(groupService.getClassGroupsByCity(city), HttpStatus.OK);
+        } catch (GroupNotFoundException e){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
     @PostMapping("/new")
     public ResponseEntity createClassGroup(@RequestBody @Valid SampleClassGroupDto sampleClassGroupDto) {
         try {
@@ -67,4 +76,15 @@ public class GroupController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
+
+    @GetMapping("/cities")
+    public ResponseEntity getCities() {
+        try {
+            return new ResponseEntity<>(groupService.getCities(), HttpStatus.OK);
+        } catch (GroupNotFoundException e){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+
 }

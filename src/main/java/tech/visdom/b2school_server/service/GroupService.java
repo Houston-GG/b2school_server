@@ -15,6 +15,7 @@ import tech.visdom.b2school_server.service.learning_tests.ThemeService;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,6 +44,10 @@ public class GroupService {
         return IterableUtils.toList(groupDao.findAll()).stream().map(ClassGroup::toDto).collect(Collectors.toList());
     }
 
+    public List<ClassGroupDto> getClassGroupsByCity(String name) {
+        return groupDao.findByCity(name).orElseThrow(() -> new GroupNotFoundException("Group with city name " + name + " not found.")).stream().map(ClassGroup::toDto).collect(Collectors.toList());
+    }
+
     public ClassGroupDto createClassGroup(SampleClassGroupDto sampleClassGroupDto) {
         ClassGroup classGroup = sampleClassGroupDto.toClassGroupModel();
         User user = userService.getAuthUserCredentials();
@@ -69,6 +74,9 @@ public class GroupService {
         }
 
         return userStatistics;
+    }
 
+    public Set<String> getCities() {
+       return IterableUtils.toList(groupDao.findAll()).stream().map(ClassGroup::getCity).collect(Collectors.toSet());
     }
 }
