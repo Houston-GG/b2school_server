@@ -50,6 +50,7 @@ public class User {
     public UserDto toDto() {
 
         UserDto userDto = new UserDto();
+        userDto.setId(this.id);
         userDto.setUserName(this.userName);
         userDto.setFirstName(this.firstName);
         userDto.setLastName(this.lastName);

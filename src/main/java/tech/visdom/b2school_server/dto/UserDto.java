@@ -14,6 +14,8 @@ import java.time.LocalDate;
 @ToString
 public class UserDto {
 
+    private Long id;
+
     @NotNull
     private String userName;
 
