@@ -58,4 +58,13 @@ public class GroupController {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
     }
+
+    @GetMapping("/statistic/{classGroupId}")
+    public ResponseEntity getGroupStatistic(@PathVariable(value = "classGroupId") Long classGroupId) {
+        try {
+            return new ResponseEntity<>(groupService.getGroupStatistic(classGroupId), HttpStatus.OK);
+        } catch (GroupNotFoundException e){
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
 }

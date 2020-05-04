@@ -31,4 +31,13 @@ public class ThemeService {
                 .forEach(l -> l.setUserLevelDto(userLevelService.getLastUserLevel(userService.getAuthUserCredentials().getId(), l.getId()))));
         return themeDtoList;
     }
+
+    public List<ThemeDto> getAllThemes(Long userId) {
+        List<ThemeDto> themeDtoList = IterableUtils.toList(themeDao.findAll()).stream().map(Theme::toDto).collect(Collectors.toList());
+        themeDtoList.forEach(t -> t.getLevels()
+                .forEach(l -> l.setUserLevelDto(userLevelService.getLastUserLevel(userId, l.getId()))));
+        return themeDtoList;
+    }
+
+
 }
