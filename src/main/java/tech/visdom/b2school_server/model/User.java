@@ -2,11 +2,13 @@ package tech.visdom.b2school_server.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import tech.visdom.b2school_server.dto.ExtendedUserDto;
 import tech.visdom.b2school_server.dto.UserDto;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor
 @Data
@@ -45,7 +47,15 @@ public class User {
             joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"),
             inverseJoinColumns = @JoinColumn(name = "ROLE_ID", referencedColumnName = "ID")
     )
-    private List<Role> roles;
+    private Set<Role> roles;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "user_group",
+            joinColumns = @JoinColumn(name = "USER_ID", referencedColumnName = "ID"),
+            inverseJoinColumns = @JoinColumn(name = "GROUP_ID", referencedColumnName = "ID")
+    )
+    private Set<ClassGroup> classGroups;
 
     public UserDto toDto() {
 
@@ -58,4 +68,15 @@ public class User {
         return userDto;
     }
 
+    public ExtendedUserDto toExtendedUserDto() {
+
+        ExtendedUserDto extendedUserDto = new ExtendedUserDto();
+        extendedUserDto.setId(this.id);
+        extendedUserDto.setUserName(this.userName);
+        extendedUserDto.setFirstName(this.firstName);
+        extendedUserDto.setLastName(this.lastName);
+        extendedUserDto.setPoints(this.points);
+        extendedUserDto.setClassGroupsDto(this.classGroups.stream().map(ClassGroup::toDto).collect(Collectors.toList()));
+        return extendedUserDto;
+    }
 }
