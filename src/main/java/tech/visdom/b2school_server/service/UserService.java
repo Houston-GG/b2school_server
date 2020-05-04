@@ -48,4 +48,9 @@ public class UserService {
         return userDao.save(user).toDto();
     }
 
+    public void addPoints(Integer points) {
+        User user = getAuthUserCredentials();
+        user.setPoints(user.getPoints() + points);
+    }
+
 }

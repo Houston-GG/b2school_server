@@ -14,7 +14,6 @@ import tech.visdom.b2school_server.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class UserLevelService {
@@ -41,19 +40,27 @@ public class UserLevelService {
         userLevel.setExerciseCount(userTestResult.getAnswers().size());
         List<Result> results = new ArrayList<>();
 
-        AtomicReference<Integer> successExerciseCount = new AtomicReference<>(0);
-        userTestResult.getAnswers().forEach((a) -> {
-            Answer answer = answerDao.findById(a).orElseThrow(() -> new AnswerNotFoundException("Answer with ID " + a + " not found."));
-            if (!answer.getExercise().getLevelId().equals(userTestResult.getLevelId()))
-                throw new AnswerNotFoundException("Answer with ID " + a + " not found in level with ID " + userTestResult.getLevelId() + ".");
-            if (answer.getIsCorrect()) {
-                successExerciseCount.updateAndGet(v -> v + 1);
+        Integer successExerciseCount = 0;
+        Integer points = 0;
+
+        for (Long answer: userTestResult.getAnswers()) {
+            Answer answerTmp = answerDao.findById(answer).orElseThrow(() -> new AnswerNotFoundException("Answer with ID " + answer + " not found."));
+            if (!answerTmp.getExercise().getLevelId().equals(userTestResult.getLevelId()))
+                throw new AnswerNotFoundException("Answer with ID " + answer + " not found in level with ID " + userTestResult.getLevelId() + ".");
+            if (answerTmp.getIsCorrect()) {
+                successExerciseCount ++;
+                points += answerTmp.getExercise().getComplexity();
             }
-            results.add(new Result(answer.getExercise().getText(), answer.getText(), answer.getIsCorrect(), userLevel));
-        });
-        userLevel.setSuccessExerciseCount(successExerciseCount.get());
-        userLevel.setSuccessfullyPassed(userTestResult.getAnswers().size() == successExerciseCount.get());
+            results.add(new Result(answerTmp.getExercise().getText(), answerTmp.getText(), answerTmp.getIsCorrect(), userLevel));
+        }
+
+        userLevel.setSuccessExerciseCount(successExerciseCount);
+        userLevel.setSuccessfullyPassed(userTestResult.getAnswers().size() == successExerciseCount);
         userLevel.setResults(results);
+
+        if(userTestResult.getAnswers().size() == successExerciseCount)
+        userService.addPoints(points);
+
         return userLevelDao.save(userLevel).toDto();
     }
 
