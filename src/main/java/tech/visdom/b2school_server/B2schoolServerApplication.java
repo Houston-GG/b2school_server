@@ -22,6 +22,7 @@ public class B2schoolServerApplication extends SpringBootServletInitializer {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
     }
 
+    //Test
     public static void main(String[] args) {
         SpringApplication.run(B2schoolServerApplication.class, args);
     }
